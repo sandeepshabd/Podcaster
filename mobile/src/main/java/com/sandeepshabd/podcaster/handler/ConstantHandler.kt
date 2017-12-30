@@ -17,5 +17,7 @@ class ConstantHandler {
         const val AUDIO_ATTR = "url"
         const val IMG_ATTR = "href"
         const val ITEMS_TO_DISPLAY = 20
+
+        const val RSS_DATA = "RSS_DATA"
     }
 }

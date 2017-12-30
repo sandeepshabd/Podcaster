@@ -3,6 +3,7 @@ package com.sandeepshabd.podcaster.views
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.sandeepshabd.podcaster.R
+import com.sandeepshabd.podcaster.handler.ConstantHandler
 import com.sandeepshabd.podcaster.models.RSSItem
 import com.sandeepshabd.podcaster.presenters.SplashPresenter
 import org.jetbrains.anko.AnkoLogger
@@ -14,7 +15,7 @@ class SplashActivity : AppCompatActivity(), AnkoLogger,ISplashView {
 
 
     override fun onDataFetched(rssData:  ArrayList<RSSItem>) {
-        startActivity<DisplayDataActivity>("data" to rssData)
+        startActivity<DisplayDataActivity>(ConstantHandler.RSS_DATA to rssData)
     }
 
 
