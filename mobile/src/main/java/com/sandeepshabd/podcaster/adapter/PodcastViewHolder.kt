@@ -13,7 +13,7 @@ import org.jetbrains.anko.info
  * Created by sandeepshabd on 12/30/17.
  */
 
-class PodcastViewHolder(view: View) : ViewHolder(view), View.OnClickListener, AnkoLogger {
+class PodcastViewHolder(view: View) : ViewHolder(view), AnkoLogger {
 
 
     internal var cardView = view.findViewById<View>(R.id.podcastCardViewID) as CardView
@@ -21,13 +21,5 @@ class PodcastViewHolder(view: View) : ViewHolder(view), View.OnClickListener, An
     internal var podcastTitle = view.findViewById<View>(R.id.podcastTitle) as TextView
     internal var podcastDuration = view.findViewById<View>(R.id.podcastDuration) as TextView
     internal var podcastPubDate = view.findViewById<View>(R.id.pubDate) as TextView
-
-    init {
-        view.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View) {
-        info(" The view was clicked.")
-    }
 
 }

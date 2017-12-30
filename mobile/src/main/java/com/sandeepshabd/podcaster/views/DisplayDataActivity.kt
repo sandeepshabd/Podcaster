@@ -12,15 +12,31 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
 import org.jetbrains.anko.info
 
-class DisplayDataActivity : AppCompatActivity(), AnkoLogger {
+class DisplayDataActivity : AppCompatActivity(), AnkoLogger, IDisplayView {
+
+    var audioUrl = ""
+    var displayRssData = ArrayList<RSSItem>()
+    var currentPosition = 0
+
+    override fun onCardSelected(position: Int) {
+        info("clicked position:" + position)
+        if(currentPosition != position){
+            audioUrl = displayRssData.get(currentPosition).audioURL
+        }else{
+            info("user clicked the same position.")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_data)
-        var displayRssData = intent.getParcelableArrayListExtra<RSSItem>(ConstantHandler.RSS_DATA)
+        displayRssData = intent.getParcelableArrayListExtra<RSSItem>(ConstantHandler.RSS_DATA)
         info("got data in Diplay. Size of data:" + displayRssData.size)
+        audioUrl = displayRssData.get(0).audioURL
         var podcastRecycler = find<RecyclerView>(R.id.podcastListingRecyclerView)
-        var linearLayout = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        var linearLayout = LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL,
+                false)
         podcastRecycler.layoutManager = linearLayout
         podcastRecycler.setHasFixedSize(false)
         podcastRecycler.adapter = PodcastViewAdapter(this, displayRssData)
