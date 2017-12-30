@@ -1,61 +1,74 @@
 package com.sandeepshabd.podcaster.helpers
 
 import android.support.annotation.WorkerThread
-import com.sandeepshabd.podcaster.handler.RssXMLDataHandler
+import com.sandeepshabd.podcaster.handler.ConstantHandler
+import com.sandeepshabd.podcaster.handler.ConstantHandler.Companion.AUDIO_ATTR
+import com.sandeepshabd.podcaster.handler.ConstantHandler.Companion.IMG_ATTR
+import com.sandeepshabd.podcaster.models.RSSItem
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.ResponseBody
-import org.xml.sax.InputSource
-import javax.xml.parsers.SAXParserFactory
+import javax.xml.parsers.DocumentBuilderFactory
+
 
 /**
  * Created by sandeepshabd on 12/29/17.
  */
 
-class RSSHelper{
-
-
+class RSSHelper {
 
     @WorkerThread
-    fun fetchEconomicTimesRSSData():String{
-        val url = "https://rss.acast.com/theeconomistallaudio";
+    fun fetchEconomicTimesRSSData(): ArrayList<RSSItem> {
+        val url = "https://rss.acast.com/theeconomistallaudio" //url to read
         val urlLoaderURL = HttpUrl.parse(url)
 
-        try{
+        try {
             val rssClient = OkHttpClient();
             val rssRequest = Request.Builder().url(urlLoaderURL).build()
             val getRssReponse = rssClient.newCall(rssRequest).execute()
-            if(getRssReponse.isSuccessful){
-                parseRSS(getRssReponse.body())
-            }else{
+            if (getRssReponse.isSuccessful) {
+                return parseRSS(getRssReponse.body())
+            } else {
                 print("failure during call.")
             }
 
+        } catch (e: Exception) {
+            print("Exception occurred." + e.message)
         }
-        catch (e:Exception){
-            print("Exception occurred.")
-        }
-        return "done"
+        return ArrayList<RSSItem>()
     }
 
-    private fun parseRSS(rssBody: ResponseBody?):String {
+    fun parseRSS(rssBody: ResponseBody?): ArrayList<RSSItem> {
+        var economicTimesList = ArrayList<RSSItem>()
         try {
-            val saxFactory = SAXParserFactory.newInstance()
-            val xmlParser = saxFactory.newSAXParser()
-            val xmlReader = xmlParser.xmlReader
-            val xmlToRead = InputSource(rssBody?.byteStream())
-
-            val handler = RssXMLDataHandler()
-
-            xmlReader.contentHandler = handler
-            xmlReader.parse(xmlToRead)
-
-            return "test Data"
-        }  catch (e: Exception) {
-            print("error reading the file.")
-
+            var newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+            var parse = newDocumentBuilder.parse(rssBody?.byteStream())
+            val resultNodeList = parse.getElementsByTagName(ConstantHandler.ITEM)
+            var resultNodeListSize = ConstantHandler.ITEMS_TO_DISPLAY
+            if (resultNodeList.length > ConstantHandler.ITEMS_TO_DISPLAY) {
+                resultNodeListSize = ConstantHandler.ITEMS_TO_DISPLAY
+            }
+            for (j in 0 until resultNodeListSize) {
+                var newRsItem = RSSItem()
+                var resultNode = resultNodeList.item(j)
+                for (childCount in 0 until resultNode.childNodes.length) {
+                    var currentnode = resultNode.childNodes.item(childCount)
+                    when (currentnode.nodeName) {
+                        ConstantHandler.TITLE -> newRsItem.title = currentnode.textContent
+                        ConstantHandler.SUBTITLE -> newRsItem.subTitle = currentnode.textContent
+                        ConstantHandler.DURATION -> newRsItem.duration = currentnode.textContent
+                        ConstantHandler.PUB_DATE -> newRsItem.pubDate = currentnode.textContent
+                        ConstantHandler.IMAGE -> newRsItem.imageSource = currentnode.attributes.getNamedItem(IMG_ATTR).textContent
+                        ConstantHandler.AUDIO -> newRsItem.audioURL = currentnode.attributes.getNamedItem(AUDIO_ATTR).textContent
+                        else -> {
+                        }
+                    }
+               }
+                economicTimesList.add(newRsItem)
+            }
+        } catch (e1: Exception) {
         }
-
-
+        return economicTimesList
+    }
 }

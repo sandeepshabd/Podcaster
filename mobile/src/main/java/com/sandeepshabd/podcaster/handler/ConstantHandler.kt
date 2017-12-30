@@ -14,5 +14,8 @@ class ConstantHandler {
         const val DURATION = "itunes:duration"
         const val IMAGE = "itunes:image"
         const val AUDIO = "enclosure"
+        const val AUDIO_ATTR = "url"
+        const val IMG_ATTR = "href"
+        const val ITEMS_TO_DISPLAY = 20
     }
 }
