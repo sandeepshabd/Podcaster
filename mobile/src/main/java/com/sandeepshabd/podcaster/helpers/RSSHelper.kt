@@ -9,14 +9,17 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.ResponseBody
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import javax.xml.parsers.DocumentBuilderFactory
 
 
 /**
+ * THe class will make BO call and fetch rss and parse the data.
  * Created by sandeepshabd on 12/29/17.
  */
 
-class RSSHelper {
+class RSSHelper : AnkoLogger {
 
     @WorkerThread
     fun fetchEconomicTimesRSSData(): ArrayList<RSSItem> {
@@ -24,22 +27,25 @@ class RSSHelper {
         val urlLoaderURL = HttpUrl.parse(url)
 
         try {
-            val rssClient = OkHttpClient();
+            val rssClient = OkHttpClient()
             val rssRequest = Request.Builder().url(urlLoaderURL).build()
+            info("making call to BO")
             val getRssReponse = rssClient.newCall(rssRequest).execute()
+            info("received response from BO")
             if (getRssReponse.isSuccessful) {
                 return parseRSS(getRssReponse.body())
             } else {
-                print("failure during call.")
+                info("failure during call.")
             }
 
         } catch (e: Exception) {
-            print("Exception occurred." + e.message)
+            error("Exception occurred." + e.message)
         }
         return ArrayList<RSSItem>()
     }
 
     fun parseRSS(rssBody: ResponseBody?): ArrayList<RSSItem> {
+        info("parsing the data.")
         var economicTimesList = ArrayList<RSSItem>()
         try {
             var newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -49,6 +55,7 @@ class RSSHelper {
             if (resultNodeList.length > ConstantHandler.ITEMS_TO_DISPLAY) {
                 resultNodeListSize = ConstantHandler.ITEMS_TO_DISPLAY
             }
+            info("length of data from bo:" + resultNodeList.length)
             for (j in 0 until resultNodeListSize) {
                 var newRsItem = RSSItem()
                 var resultNode = resultNodeList.item(j)
@@ -64,7 +71,7 @@ class RSSHelper {
                         else -> {
                         }
                     }
-               }
+                }
                 economicTimesList.add(newRsItem)
             }
         } catch (e1: Exception) {
