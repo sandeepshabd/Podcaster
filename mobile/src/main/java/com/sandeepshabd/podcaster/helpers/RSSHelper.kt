@@ -44,7 +44,7 @@ class RSSHelper : AnkoLogger {
         return ArrayList<RSSItem>()
     }
 
-    fun parseRSS(rssBody: ResponseBody?): ArrayList<RSSItem> {
+    private fun parseRSS(rssBody: ResponseBody?): ArrayList<RSSItem> {
         info("parsing the data.")
         var economicTimesList = ArrayList<RSSItem>()
         try {
