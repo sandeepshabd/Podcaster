@@ -9,6 +9,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.MediaSessionCompat
+import com.sandeepshabd.podcaster.R
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.info
@@ -18,9 +19,6 @@ class PodcastMediaService : MediaBrowserServiceCompat(), AnkoLogger {
 
 
     private val TAG = "PodcastMediaService"
-
-    //private val MY_MEDIA_ROOT_ID = "media_root_id"
-    private val MY_EMPTY_MEDIA_ROOT_ID = "podcast_empty_root_id"
 
     private var mMediaSession: MediaSessionCompat? = null
     private var mStateBuilder: PlaybackStateCompat.Builder? = null
@@ -47,7 +45,7 @@ class PodcastMediaService : MediaBrowserServiceCompat(), AnkoLogger {
             it?.setCallback(PodcastMediaCallBack())
 
             // Set the session's token so that client activities can communicate with it.
-            setSessionToken(it?.sessionToken)
+            sessionToken = it?.sessionToken
         }
 
     }
@@ -92,11 +90,12 @@ class PodcastMediaService : MediaBrowserServiceCompat(), AnkoLogger {
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        result.sendResult(null)
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        return  MediaBrowserServiceCompat.BrowserRoot(MY_EMPTY_MEDIA_ROOT_ID, null)
+        return  MediaBrowserServiceCompat.BrowserRoot(getString(R.string.app_name), // Name visible in Android Auto
+                null)
     }
 
 
