@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/podcastLinearCardViewID"
     android:layout_marginTop="10dp"
     android:layout_marginLeft="10dp"
     android:layout_width="300dp"
-    android:background="@drawable/rect_border"
+    android:background="@drawable/selector_row"
     android:layout_height="wrap_content" >
 
     <android.support.v7.widget.CardView

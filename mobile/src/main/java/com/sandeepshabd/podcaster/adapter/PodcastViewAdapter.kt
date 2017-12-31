@@ -2,6 +2,8 @@ package com.sandeepshabd.podcaster.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +19,19 @@ import org.jetbrains.anko.info
  */
 
 class PodcastViewAdapter(private var displayView: IDisplayView,
-                         private var rssItems: ArrayList<RSSItem>):RecyclerView.Adapter<PodcastViewHolder>(), AnkoLogger {
+                         private var rssItems: ArrayList<RSSItem>) : RecyclerView.Adapter<PodcastViewHolder>(), AnkoLogger {
 
-    var context:Context? = null
+        override fun onViewDetachedFromWindow(holder: PodcastViewHolder?) {
+        super.onViewDetachedFromWindow(holder)
+        holder?.linearLayout?.background = context?.getDrawable(R.drawable.rect_border)
+    }
+
+    private val selectedItems = SparseBooleanArray()
+    var context: Context? = null
+    var prevPos = -1
 
     override fun onBindViewHolder(holder: PodcastViewHolder, position: Int) {
+        holder.linearLayout.isSelected = false
         holder.podcastTitle.text = rssItems.get(position).title
         holder.podcastDuration.text = rssItems.get(position).duration
         holder.podcastPubDate.text = rssItems.get(position).pubDate
@@ -29,9 +39,21 @@ class PodcastViewAdapter(private var displayView: IDisplayView,
                 .load(rssItems.get(position).imageSource)
                 .resize(100, 100)
                 .centerCrop().into(holder.podcastPoster)
+        if(prevPos == -1 && position ==0){
+            holder.linearLayout.isSelected = true
+            prevPos = 0
+        }
 
-        holder.cardView.setOnClickListener({view -> displayView.onCardSelected(position)})
-   }
+        holder.cardView.setOnClickListener({ view ->
+            if(position != prevPos) {
+                displayView.onCardSelected(position)
+                holder.linearLayout.isSelected = true
+                prevPos = position
+            }
+        })
+
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PodcastViewHolder {
         context = parent.context
