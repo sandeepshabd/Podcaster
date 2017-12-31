@@ -1,5 +1,6 @@
 package com.sandeepshabd.podcaster.views
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -17,25 +18,36 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.info
 
 
-class DisplayDataActivity : AppCompatActivity(), AnkoLogger, IDisplayView {
+class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
+        IDisplayView, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
+
+    private var mediaPlayer: MediaPlayer? = null
+    private val mediaFileLengthInMilliseconds: Int = 0
+    private var playButton: Button? = null
+
+    override fun onBufferingUpdate(p0: MediaPlayer?, p1: Int) {
+        info("buffered:" + p1)
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        playButton?.text = PLAY_BUTTON
+    }
 
     var audioUrl = ""
     var displayRssData = ArrayList<RSSItem>()
     var currentPosition = 0
 
 
-
-
     override fun onCardSelected(position: Int) {
         info("clicked position:" + position)
-        if(currentPosition != position){
+        if (currentPosition != position) {
             audioUrl = displayRssData.get(currentPosition).audioURL
             var podcastRecycler = find<RecyclerView>(R.id.podcastListingRecyclerView)
             var holder = podcastRecycler.findViewHolderForAdapterPosition(currentPosition) as PodcastViewHolder
             holder.linearLayout.isSelected = false;
             currentPosition = position
 
-        }else{
+        } else {
             info("user clicked the same position.")
         }
     }
@@ -56,14 +68,33 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger, IDisplayView {
 
         podcastRecycler.layoutManager = linearLayout
 
-
-        var playButton =  find<Button>(R.id.play)
-        playButton.setOnClickListener { view -> if(playButton.text.toString().equals(PLAY_BUTTON)){
-            playButton.text = PAUSE_BUTTON
-        }else{
-            playButton.text = PLAY_BUTTON
-        }
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.let {
+            it?.setOnBufferingUpdateListener(this)
+            it?.setOnCompletionListener(this)
         }
 
+        var playButtonLocal = find<Button>(R.id.play)
+
+        playButtonLocal.setOnClickListener { view ->
+            if (playButtonLocal.text.toString().equals(PLAY_BUTTON)) {
+                playButtonLocal.text = PAUSE_BUTTON
+                mediaPlayer.let {
+                    it?.setDataSource(audioUrl)
+                    it?.prepare()
+                    it?.start()
+                }
+            } else {
+                playButtonLocal.text = PLAY_BUTTON
+                mediaPlayer.let {
+                    if (it!!.isPlaying) {
+                        it?.pause()
+                    }
+
+                }
+            }
+        }
+
+        playButton = playButtonLocal
     }
 }
