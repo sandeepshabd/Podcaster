@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:background="@drawable/rect_border"
-    android:layout_height="150dp" >
+    android:layout_height="200dp" >
 
     <android.support.v7.widget.CardView
         android:id="@+id/podcastCardViewID"
@@ -27,7 +27,6 @@
                 android:id="@+id/podcastTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/podcastPoster"
                 android:textSize="15sp" />
 
@@ -42,10 +41,9 @@
                 android:id="@+id/pubDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/podcastDuration"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/podcastPoster" />
+                android:paddingTop="2dp"
+                android:layout_below="@+id/podcastPoster"
+                android:layout_marginLeft="2dp" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

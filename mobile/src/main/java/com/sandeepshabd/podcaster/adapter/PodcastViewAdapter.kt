@@ -27,7 +27,7 @@ class PodcastViewAdapter(private var displayView: IDisplayView,
         holder.podcastPubDate.text = rssItems.get(position).pubDate
         Picasso.with(context)
                 .load(rssItems.get(position).imageSource)
-                .resize(50, 50)
+                .resize(100, 100)
                 .centerCrop().into(holder.podcastPoster)
 
         holder.cardView.setOnClickListener({view -> displayView.onCardSelected(position)})
