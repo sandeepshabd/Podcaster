@@ -9,6 +9,8 @@ import com.sandeepshabd.podcaster.R
 import com.sandeepshabd.podcaster.adapter.PodcastViewAdapter
 import com.sandeepshabd.podcaster.adapter.PodcastViewHolder
 import com.sandeepshabd.podcaster.handler.ConstantHandler
+import com.sandeepshabd.podcaster.handler.ConstantHandler.Companion.PAUSE_BUTTON
+import com.sandeepshabd.podcaster.handler.ConstantHandler.Companion.PLAY_BUTTON
 import com.sandeepshabd.podcaster.models.RSSItem
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.find
@@ -56,6 +58,12 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger, IDisplayView {
 
 
         var playButton =  find<Button>(R.id.play)
+        playButton.setOnClickListener { view -> if(playButton.text.toString().equals(PLAY_BUTTON)){
+            playButton.text = PAUSE_BUTTON
+        }else{
+            playButton.text = PLAY_BUTTON
+        }
+        }
 
     }
 }

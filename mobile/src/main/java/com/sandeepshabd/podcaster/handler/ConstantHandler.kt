@@ -19,5 +19,8 @@ class ConstantHandler {
         const val ITEMS_TO_DISPLAY = 50
 
         const val RSS_DATA = "RSS_DATA"
+
+        const val PLAY_BUTTON = "PLAY"
+        const val PAUSE_BUTTON = "PAUSE"
     }
 }
