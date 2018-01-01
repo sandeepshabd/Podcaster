@@ -38,13 +38,15 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
     var audioUrl = ""
     var displayRssData = ArrayList<RSSItem>()
     var currentPosition = 0
+    var dataChanged = false
 
 
     override fun onCardSelected(position: Int) {
         info("clicked position:" + position)
         info("prev position:" + currentPosition)
         if (currentPosition != position) {
-            audioUrl = displayRssData.get(currentPosition).audioURL
+            dataChanged = true
+            audioUrl = displayRssData.get(position).audioURL
             var holder: PodcastViewHolder? = null
             try {
                 holder = podcastRecycler?.findViewHolderForAdapterPosition(currentPosition) as PodcastViewHolder
@@ -60,6 +62,7 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
                 holder.linearLayout.isSelected = false
             }
         } else {
+            dataChanged = false
             info("user clicked the same position.")
         }
     }
@@ -93,6 +96,10 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
                 playButtonLocal.text = PAUSE_BUTTON
                 mediaPlayer.let {
                     try {
+                        if(dataChanged){
+                            it?.reset()
+                            dataChanged = false
+                        }
                         it?.setDataSource(audioUrl)
                         it?.prepare()
                     } catch (e: Exception) {
