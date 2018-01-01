@@ -2,10 +2,8 @@ package com.sandeepshabd.podcaster.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.sandeepshabd.podcaster.R
 import com.sandeepshabd.podcaster.models.RSSItem

@@ -23,7 +23,6 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
         IDisplayView, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
 
     private var mediaPlayer: MediaPlayer? = null
-    private val mediaFileLengthInMilliseconds: Int = 0
     private var playButton: Button? = null
     private var podcastRecycler: RecyclerView? = null
 
@@ -73,7 +72,7 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
         displayRssData = intent.getParcelableArrayListExtra<RSSItem>(ConstantHandler.RSS_DATA)
         info("got data in Diplay. Size of data:" + displayRssData.size)
         audioUrl = displayRssData.get(0).audioURL
-        podcastRecycler = find<RecyclerView>(R.id.podcastListingRecyclerView)
+        podcastRecycler = find(R.id.podcastListingRecyclerView)
         var linearLayout = LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL,
                 false)

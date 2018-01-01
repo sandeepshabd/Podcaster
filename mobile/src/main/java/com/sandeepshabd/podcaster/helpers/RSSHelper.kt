@@ -41,7 +41,7 @@ class RSSHelper : AnkoLogger {
         } catch (e: Exception) {
             error("Exception occurred." + e.message)
         }
-        return ArrayList<RSSItem>()
+        return ArrayList()
     }
 
     private fun parseRSS(rssBody: ResponseBody?): ArrayList<RSSItem> {
