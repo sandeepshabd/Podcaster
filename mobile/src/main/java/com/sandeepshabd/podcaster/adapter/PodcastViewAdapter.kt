@@ -45,10 +45,15 @@ class PodcastViewAdapter(private var displayView: IDisplayView,
         }
 
         holder.cardView.setOnClickListener({ view ->
+            info("current position is selected:"+position)
+            info("previous position is selected:"+prevPos)
             if(position != prevPos) {
-                displayView.onCardSelected(position)
+                holder?.linearLayout?.background = context?.getDrawable(R.drawable.rect_border_selected)
                 holder.linearLayout.isSelected = true
+                info("holder is selected.")
                 prevPos = position
+                displayView.onCardSelected(position)
+
             }
         })
 
