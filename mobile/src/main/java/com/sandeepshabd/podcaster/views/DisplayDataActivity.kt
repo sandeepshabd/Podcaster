@@ -42,10 +42,12 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
         info("clicked position:" + position)
         if (currentPosition != position) {
             audioUrl = displayRssData.get(currentPosition).audioURL
-            var podcastRecycler = find<RecyclerView>(R.id.podcastListingRecyclerView)
-            var holder = podcastRecycler.findViewHolderForAdapterPosition(currentPosition) as PodcastViewHolder
-            holder.linearLayout.isSelected = false;
-            currentPosition = position
+            try {
+                var podcastRecycler = find<RecyclerView>(R.id.podcastListingRecyclerView)
+                var holder = podcastRecycler?.findViewHolderForAdapterPosition(currentPosition) as PodcastViewHolder
+                holder.linearLayout.isSelected = false
+                currentPosition = position
+            }catch (e:Exception){}
 
         } else {
             info("user clicked the same position.")
@@ -77,22 +79,30 @@ class DisplayDataActivity : AppCompatActivity(), AnkoLogger,
         var playButtonLocal = find<Button>(R.id.play)
 
         playButtonLocal.setOnClickListener { view ->
-            if (playButtonLocal.text.toString().equals(PLAY_BUTTON)) {
-                playButtonLocal.text = PAUSE_BUTTON
-                mediaPlayer.let {
-                    it?.setDataSource(audioUrl)
-                    it?.prepare()
-                    it?.start()
-                }
-            } else {
-                playButtonLocal.text = PLAY_BUTTON
-                mediaPlayer.let {
-                    if (it!!.isPlaying) {
-                        it?.pause()
-                    }
 
+                if (playButtonLocal.text.toString().equals(PLAY_BUTTON)) {
+                    playButtonLocal.text = PAUSE_BUTTON
+                    mediaPlayer.let {
+                        try {
+                        it?.setDataSource(audioUrl)
+                        it?.prepare()
+                        }catch (e:Exception){}
+                        try {
+                            it?.start()
+                        }catch (e:Exception){}
+                    }
+                } else {
+                    playButtonLocal.text = PLAY_BUTTON
+                    mediaPlayer.let {
+                        if (it!!.isPlaying) {
+                            try {
+                                it?.pause()
+                            }catch (e:Exception){}
+                        }
+
+                    }
                 }
-            }
+
         }
 
         playButton = playButtonLocal
